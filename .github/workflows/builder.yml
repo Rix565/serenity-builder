@@ -28,8 +28,8 @@ jobs:
          ninja install
          ninja image
          
-      - name: Send builded image
+      - name: Send builded env
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: serenity/build/
+          path: serenity/
