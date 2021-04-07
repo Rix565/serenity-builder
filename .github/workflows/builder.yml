@@ -31,5 +31,5 @@ jobs:
       - name: Send builded image
         uses: actions/upload-artifact@v2
         with:
-          name: disks
-          path: disks/
+          name: build
+          path: build/
