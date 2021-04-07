@@ -1,1 +1,35 @@
+name: Builder
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Install dependencies
+        run: |
+         sudo apt install gcc-10 g++-10
+         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 900 --slave /usr/bin/g++ g++ /usr/bin/g++-10
+         sudo apt install build-essential cmake curl libmpfr-dev libmpc-dev libgmp-dev e2fsprogs ninja-build qemu-system-i386 qemu-utils
+      - name : Clone the repo of serenity
+        run: |
+         git clone https://github.com/SerenityOS/serenity.git
+      - name: Build toolchain
+        run : |
+         cd serenity
+         Toolchain/BuildIt.sh
+      - name: Build SerenityOS
+        run : |
+         cd serenity/Toolchain
+         cd ../Build/i686
+         cmake ../.. -G Ninja
+         ninja install
+         ninja image
+         
+      - name: Send builded image
+        uses: actions/upload-artifact@v2
+        with:
+          name: disks
+          path: disks/
